@@ -16,10 +16,7 @@ Template.main.events({
     var text = event.target.text.value;
     console.log(text);
 
-    Todos.insert({
-      text: text,
-      createdAt: new Date()
-    });
+    Meteor.call('addTodo', text);
 
     // clear
     event.target.text.value = "";
@@ -28,12 +25,19 @@ Template.main.events({
     return false;
   },
   "click .toggle-checked": function() {
-    Todos.update(this._id, {$set:{checked: ! this.checked}});
+    Meteor.call('setChecked', this._id, !this.checked);
   },
   "click .delete-todo": function() {
     if(confirm('Are you sure?')) {
-      Todos.remove(this._id);
+      Meteor.call('deleteTodo', this._id);
     }
   }
 });
+
+Accounts.ui.config({
+  passwordSignupFields: "USERNAME_ONLY"
+})
+
+
+
 
